@@ -1,5 +1,5 @@
 // Shared in-memory storage for demo mode signals
-let demoSignals: any[] = [];
+export let demoSignals: any[] = [];
 
 export function getDemoSignals() {
   return demoSignals;
