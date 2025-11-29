@@ -56,7 +56,6 @@ export default function SignalModal({ onClose, userLocation, onSuccess }: Signal
               <SignalForm
                 onSuccess={handleSuccess}
                 onClose={onClose}
-                userLocation={userLocation}
               />
             </div>
           )}
