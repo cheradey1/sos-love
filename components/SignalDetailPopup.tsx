@@ -102,12 +102,6 @@ export default function SignalDetailPopup({ signal, onClose }: SignalDetailPopup
             <p className="text-2xl font-bold text-blue-600 font-mono">{timeRemaining}</p>
           </div>
 
-          {/* Location */}
-          <div>
-            <p className="text-sm text-gray-500 font-semibold">АДРЕСА</p>
-            <p className="text-sm font-bold text-black">{signal.address}</p>
-          </div>
-
           {/* Buttons */}
           <div className="flex gap-3 pt-4">
             {/* Talk Button */}
