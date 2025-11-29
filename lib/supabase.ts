@@ -46,6 +46,7 @@ export const supabase = new Proxy({} as any, {
 export type Signal = {
   id: string;
   user_id: string;
+  name: string;
   lat: number;
   lng: number;
   intent: string;
