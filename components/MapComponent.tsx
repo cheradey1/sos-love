@@ -171,7 +171,6 @@ export default function MapComponent({ signals, onSignalCreated }: MapComponentP
                 <Popup>
                   <div style={{ textAlign: 'center', minWidth: '200px', color: '#000' }}>
                     <h3>{signal.intent}</h3>
-                    <p>{signal.address}</p>
                   </div>
                 </Popup>
               </Marker>
