@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
             if (!uploadError) {
               const { data: publicUrlData } = await (storage.from as (bucket: string) => {
                 upload: (name: string, file: Buffer, options: Record<string, string>) => Promise<{ error: any }>;
-                getPublicUrl: (name: string) => { publicUrl: string };
+                getPublicUrl: (name: string) => Promise<{ data: { publicUrl: string } }>;
               })('photos')
                 .getPublicUrl(fileName);
 
