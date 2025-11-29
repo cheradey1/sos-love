@@ -222,6 +222,7 @@ export default function MapComponent({ signals, onSignalCreated }: MapComponentP
       {showModal && (
         <SignalModal
           onClose={() => setShowModal(false)}
+          userLocation={{ lat: 50.4501, lng: 30.5234 }}
           onSuccess={(signal) => {
             setActiveSignalId(signal.id);
             onSignalCreated?.();
