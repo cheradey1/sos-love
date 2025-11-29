@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import { demoSignals } from '@/lib/demo-signals';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+const supabase = supabaseUrl && supabaseKey
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,25 +39,22 @@ export async function POST(request: NextRequest) {
     let photo_url = photo_base64 || `https://via.placeholder.com/200?text=${encodeURIComponent(intent)}`;
 
     // Try to upload to Supabase if configured
-    if (photo_base64 && photo_base64.includes('data:image')) {
+    if (supabase && photo_base64 && photo_base64.includes('data:image')) {
       try {
         const buffer = Buffer.from(photo_base64.split(',')[1] || photo_base64, 'base64');
         const fileName = `${user_id}-${Date.now()}.jpg`;
 
-        const supabase = getSupabase();
-        if (supabase && supabase.storage) {
-          const { error: uploadError, data: uploadData } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
+          .from('photos')
+          .upload(fileName, buffer, { contentType: 'image/jpeg' });
+
+        if (!uploadError) {
+          const { data: publicUrlData } = supabase.storage
             .from('photos')
-            .upload(fileName, buffer, { contentType: 'image/jpeg' });
+            .getPublicUrl(fileName);
 
-          if (!uploadError && uploadData) {
-            const { data: publicUrlData } = supabase.storage
-              .from('photos')
-              .getPublicUrl(fileName);
-
-            if (publicUrlData?.publicUrl) {
-              photo_url = publicUrlData.publicUrl;
-            }
+          if (publicUrlData?.publicUrl) {
+            photo_url = publicUrlData.publicUrl;
           }
         }
       } catch (err) {
@@ -77,7 +81,6 @@ export async function POST(request: NextRequest) {
     };
 
     // Try to insert to Supabase if configured
-    const supabase = getSupabase();
     if (supabase) {
       try {
         await supabase.from('signals').insert([signal]);
